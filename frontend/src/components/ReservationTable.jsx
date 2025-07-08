@@ -7,7 +7,7 @@ const ReservationTable = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const response = await axios.get('/api/reservations'); // Adjust endpoint as needed
+        const response = await axios.get('/api/reservations'); 
         setReservations(response.data);
       } catch (error) {
         console.error('Erreur lors du chargement des réservations', error);

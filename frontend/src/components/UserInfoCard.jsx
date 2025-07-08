@@ -4,7 +4,7 @@ const UserInfoCard = () => {
   const [user, setUser] = useState({ username: '', email: '' });
 
   useEffect(() => {
-    // Remplace ceci par une vraie récupération de l'utilisateur connecté
+    
     const mockUser = {
       username: '',
       email: '',

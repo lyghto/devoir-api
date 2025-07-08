@@ -12,8 +12,10 @@ router.get('/catways/:id/reservations', reservationController.getAllReservations
 // Modifier une réservation
 router.put('/catways/:id/reservations/:idReservation', reservationController.updateReservation);
 
+// Lister toutes les réservations globales (pour tous les catways)
 router.get('/reservations', reservationController.getAllReservationsGlobal);
 
+// Supprimer une réservation
 router.delete('/reservations/:idReservation', reservationController.deleteReservation);
 
 module.exports = router;

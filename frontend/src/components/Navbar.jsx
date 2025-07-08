@@ -5,8 +5,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // ou sessionStorage si tu l'utilises
-    navigate('/'); // Redirection vers la page d’accueil
+    localStorage.removeItem('token'); 
+    navigate('/'); 
   };
 
   return (

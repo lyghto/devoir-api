@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Ajout de l'import
+import axios from 'axios'; 
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ const LoginForm = () => {
         return;
       }
       localStorage.setItem('token', token);
-      window.location.href = '/dashboard'; // redirection après connexion
+      window.location.href = '/dashboard'; 
     } catch (error) {
       setMessage("Échec de la connexion");
       console.error(error);

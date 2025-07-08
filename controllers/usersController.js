@@ -25,7 +25,7 @@ exports.add = async (req, res) => {
   }
 
   try {
-    const user = await userService.add(req.body); // req.body must already contain username, email, and password (hashed if needed)
+    const user = await userService.add(req.body); 
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: err.message });
