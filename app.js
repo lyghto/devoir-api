@@ -53,5 +53,14 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const HOST = '0.0.0.0'; // Important pour Render
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
+});
+
 module.exports = app;
