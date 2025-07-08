@@ -1,7 +1,16 @@
-
-
+const Catway = require('../models/catwayModel');
 const Reservation = require('../models/reservationModel');
 const { verifyToken } = require('../controllers/usersController');
+
+
+exports.getAllReservationsGlobal = async (req, res) => {
+  try {
+    const reservations = await Reservation.find();
+    res.status(200).json(reservations);
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur', error: err });
+  }
+};
 
 /**
  * Obtenir toutes les réservations pour un catway
@@ -36,13 +45,20 @@ exports.getReservationById = async (req, res) => {
  */
 exports.createReservation = async (req, res) => {
   try {
+    const catway = await Catway.findById(req.params.id);
+    if (!catway) {
+      return res.status(404).json({ message: 'Catway introuvable' });
+    }
+
     const newReservation = new Reservation({
       ...req.body,
-      catwayNumber: req.params.id,
+      catwayNumber: catway.catwayNumber,
     });
+
     await newReservation.save();
     res.status(201).json(newReservation);
   } catch (error) {
+    console.error(error);
     res.status(400).json({ message: 'Erreur de création', error });
   }
 };
@@ -64,15 +80,9 @@ exports.updateReservation = async (req, res) => {
   }
 };
 
-/**
- * Supprimer une réservation
- */
 exports.deleteReservation = async (req, res) => {
   try {
-    const deleted = await Reservation.findOneAndDelete({ 
-      _id: req.params.idReservation, 
-      catwayNumber: req.params.id 
-    });
+    const deleted = await Reservation.findByIdAndDelete(req.params.idReservation);
     if (!deleted) return res.status(404).json({ message: 'Réservation non trouvée' });
     res.status(200).json({ message: 'Réservation supprimée' });
   } catch (error) {

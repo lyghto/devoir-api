@@ -1,7 +1,7 @@
-
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const SECRET_KEY = process.env.SECRET_KEY || 'votre_clé_secrète_temporaire';
 
 
 
@@ -23,22 +23,14 @@ exports.getAllUsers = async ()=> {
 };
 
 
-exports.add = async (req, res, next) => {
-  const temp = {
-    username     : req.body.username,
-    email    : req.body.email,
-    password : req.body.password
-  };
-
+exports.add = async (userData) => {
   try {
-    let user = await User.create(temp);
-
-    return res.status(201).json(user);
+    const user = await User.create(userData);
+    return user;
   } catch (error) {
-    return res.status(501).json(error);
+    throw error;
   }
-}
-
+};
 
 exports.update = async (req, res, next) => {
   const id = req.params.id;
@@ -69,17 +61,14 @@ exports.update = async (req, res, next) => {
   }
 }
 
-exports.delete = async (req, res, next) => {
-  const id = req.params.id;
-
+exports.delete = async (id) => {
   try {
     await User.deleteOne({ _id: id });
-
-    return res.status(204).json('delete_ok');
+    return 'delete_ok';
   } catch (error) {
-    return res.status(501).json(error);
+    throw error;
   }
-}
+};
 
 exports.authenticate = async (req, res, next) => {
   const { email, password } = req.body;

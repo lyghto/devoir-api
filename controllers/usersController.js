@@ -3,6 +3,8 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt');  
 const jwt = require('jsonwebtoken');
 
+const SECRET_KEY = process.env.SECRET_KEY || 'votre_clé_secrète_temporaire';
+
 exports.getAllUsers = async (req, res) => {
   const users = await userService.getAllUsers();
   res.json(users);
@@ -14,11 +16,16 @@ exports.getUserById = async (req, res) => {
   res.json(user);
 };
 
-exports.createUser = async (req, res) => {
+exports.add = async (req, res) => {
+  const { username, email, password } = req.body;
+  console.log('req.body:', req.body);
+
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'Tous les champs (username, email, password) sont requis.' });
+  }
+
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const userData = { ...req.body, password: hashedPassword };
-    const user = await userService.createUser(userData);
+    const user = await userService.add(req.body); // req.body must already contain username, email, and password (hashed if needed)
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -31,10 +38,14 @@ exports.updateUser = async (req, res) => {
   res.json(user);
 };
 
-exports.deleteUser = async (req, res) => {
-  const user = await userService.deleteUser(req.params.id);
-  if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
-  res.status(204).send();
+exports.delete = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const result = await userService.delete(userId);
+    return res.status(204).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erreur lors de la suppression', error });
+  }
 };
 
 exports.authenticate = async (req, res) => {
@@ -47,9 +58,9 @@ exports.authenticate = async (req, res) => {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ message: 'Mot de passe incorrect' });
 
-    const token = jwt.sign({ id: user._id, email: user.email }, 'votre_clé_secrète', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
 
-    res.cookie('token', token, { httpOnly: true }).json({ message: 'Connecté', token });
+    res.json({ message: 'Connecté', token });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err });
   }
@@ -64,7 +75,7 @@ exports.verifyToken = (req, res, next) => {
   if (!token) return res.status(401).json({ message: 'Accès refusé : aucun token fourni' });
 
   try {
-    const decoded = jwt.verify(token, 'votre_clé_secrète');
+    const decoded = jwt.verify(token, SECRET_KEY);
     req.user = decoded;
     next();
   } catch (err) {

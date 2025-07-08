@@ -1,7 +1,7 @@
 
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = process.env.SECRET_KEY;
+const SECRET_KEY = process.env.SECRET_KEY || 'votre_clé_secrète';
 
 exports.checkJWT = async (req, res, next) => {
   let token = req.headers['x-access-token'] || req.headers['authorization'];
@@ -16,12 +16,11 @@ exports.checkJWT = async (req, res, next) => {
       if (err) {
         return res.status(401).json({ message: 'Token invalide ou expiré' });
       } else {
-        req.decoded = decoded;
+        req.user = { id: decoded.id, email: decoded.email };
 
-      
         const expiresIn = 24 * 60 * 60; // 24h
         const newToken = jwt.sign(
-          { user: decoded.user },
+          { id: decoded.id, email: decoded.email },
           SECRET_KEY,
           { expiresIn: expiresIn }
         );

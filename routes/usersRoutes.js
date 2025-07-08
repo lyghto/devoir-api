@@ -5,9 +5,9 @@ const private = require('../middlewares/private');
 
 router.get('/:id', private.checkJWT, userController.getUserById);
 router.get('/', private.checkJWT, userController.getAllUsers);
-router.post('/', userController.createUser);
+router.post('/', userController.add);
 router.patch('/:id', private.checkJWT, userController.updateUser);
-router.delete('/:id', private.checkJWT, userController.deleteUser);
+router.delete('/:id', private.checkJWT, userController.delete);
 router.post('/authenticate', userController.authenticate);
 
 module.exports = router;
