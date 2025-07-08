@@ -52,6 +52,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Erreur serveur' });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
 module.exports = app;
