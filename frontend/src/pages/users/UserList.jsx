@@ -6,21 +6,32 @@ import AddUser from './AddUser';
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setMessage("Token manquant. Veuillez vous connecter.");
+      return;
+    }
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:8080/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setUsers(response.data);
+      setMessage('');
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setMessage("Accès non autorisé. Veuillez vous reconnecter.");
+      } else {
+        setMessage("Erreur lors du chargement des utilisateurs.");
+      }
       console.error("Erreur lors du chargement des utilisateurs :", error);
     }
   };
@@ -41,6 +52,7 @@ const UserList = () => {
         {showForm ? 'Fermer le formulaire' : 'Ajouter un utilisateur'}
       </button>
       {showForm && <AddUser onUserAdded={fetchUsers} />}
+      {message && <p>{message}</p>}
       <ul>
         {users.map((user) => (
           <li key={user._id}>
