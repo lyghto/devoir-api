@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const usersRouter = require('./routes/usersRoutes');
 const reservationsRoutes = require('./routes/reservationsRoutes');
 const catwaysRoutes = require('./routes/catwaysRoutes');
+const indexRouter = require('./routes/index');
 
 const app = express();
 
@@ -28,6 +29,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.use('/', indexRouter);
 
 app.use('/users', usersRouter);
 app.use('/reservation', reservationsRoutes);
