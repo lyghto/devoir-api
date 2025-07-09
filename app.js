@@ -6,7 +6,6 @@ const logger = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/usersRoutes');
 const reservationsRoutes = require('./routes/reservationsRoutes');
 const catwaysRoutes = require('./routes/catwaysRoutes');
@@ -30,7 +29,6 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reservation', reservationsRoutes);
 app.use('/api/catways', catwaysRoutes);
