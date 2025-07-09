@@ -50,15 +50,14 @@ app.use((err, req, res, next) => {
 });
 
 
-const PORT = process.env.PORT;
-const HOST = '0.0.0.0';
+const PORT = process.env.PORT || 10000;
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on http://${HOST}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 module.exports = app;
