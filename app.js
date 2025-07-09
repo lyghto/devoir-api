@@ -50,7 +50,7 @@ app.use((err, req, res, next) => {
 });
 
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 const HOST = '0.0.0.0';
 
 app.get('/', (req, res) => {
